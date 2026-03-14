@@ -1,0 +1,17 @@
+# Environment
+.env
+*.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+htmlcov/
+.coverage
+
+# Poetry
+.venv/
+
+# Docker
+postgres_data/

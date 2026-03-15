@@ -22,15 +22,19 @@ def test_list_events_with_title_filter(client, roles, admin_user, admin_token):
             "start_date": "2026-05-01T09:00:00",
             "end_date": "2026-05-01T18:00:00",
             "capacity": 50,
+            "status": "published",
         },
         headers={"Authorization": f"Bearer {admin_token}"},
     )
-    response = client.get("/api/events/?title=Python")
+    response = client.get(
+        "/api/events/?title=Python",
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
     assert response.status_code == status.HTTP_200_OK
     data = response.json()
     assert len(data["items"]) >= 1
 
-
+    
 def test_create_event_as_admin(client, roles, admin_token):
     response = client.post(
         "/api/events/",

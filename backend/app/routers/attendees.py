@@ -48,7 +48,16 @@ def my_event_registrations(
 def register_to_session(data: SessionRegistrationCreate, session: SessionDep, current_user: CurrentUser):
     try:
         service = AttendeeService(session)
-        return service.register_to_session(data, current_user.id)
+        reg = service.register_to_session(data, current_user.id)
+        session_obj = service.session_repo.get_by_id(reg.session_id)
+        return {
+            "id": reg.id,
+            "user_id": reg.user_id,
+            "session_id": reg.session_id,
+            "event_id": session_obj.event_id if session_obj else None,
+            "status": reg.status,
+            "registered_at": reg.registered_at,
+        }
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 
@@ -57,7 +66,16 @@ def register_to_session(data: SessionRegistrationCreate, session: SessionDep, cu
 def cancel_session_registration(session_id: UUID, session: SessionDep, current_user: CurrentUser):
     try:
         service = AttendeeService(session)
-        return service.cancel_session_registration(session_id, current_user.id)
+        reg = service.cancel_session_registration(session_id, current_user.id)
+        session_obj = service.session_repo.get_by_id(reg.session_id)
+        return {
+            "id": reg.id,
+            "user_id": reg.user_id,
+            "session_id": reg.session_id,
+            "event_id": session_obj.event_id if session_obj else None,
+            "status": reg.status,
+            "registered_at": reg.registered_at,
+        }
     except ValueError as e:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e))
 

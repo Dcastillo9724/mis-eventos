@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable, computed, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, catchError, switchMap, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LoginRequest, RegisterRequest, TokenResponse } from '../models/auth.model';
@@ -17,7 +18,10 @@ export class AuthService {
 
   isAuthenticated = computed(() => !!this.currentUser());
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private router: Router
+  ) {}
 
   register(data: RegisterRequest): Observable<User> {
     return this.http.post<User>(`${this.apiUrl}/auth/register`, data);
@@ -78,7 +82,7 @@ export class AuthService {
     localStorage.removeItem('access_token');
     this.currentUser.set(null);
     this.bumpAuthVersion();
-    window.location.href = '/events';
+    this.router.navigate(['/events']);
   }
 
   getToken(): string | null {

@@ -1,0 +1,302 @@
+.user-list-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0.5rem 0 2rem;
+}
+
+.user-list-hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+  padding: 1.6rem 1.7rem;
+  border: 1px solid rgba(232, 224, 214, 0.9);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 107, 71, 0.08) 0%, transparent 28%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(253, 250, 246, 0.92) 100%);
+  box-shadow: 0 18px 40px rgba(28, 25, 23, 0.08);
+}
+
+.user-list-copy {
+  max-width: 680px;
+
+  .list-eyebrow {
+    margin: 0 0 0.45rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+  }
+
+  .list-subtitle {
+    margin: 0.85rem 0 0;
+    color: var(--charcoal-light);
+    font-size: 1rem;
+    line-height: 1.75;
+  }
+}
+
+.user-list-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+:host ::ng-deep .user-list-card {
+  border-radius: 24px !important;
+  border: 1px solid rgba(232, 224, 214, 0.92) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 14px 34px rgba(28, 25, 23, 0.06) !important;
+  overflow: hidden !important;
+
+  .p-card-body {
+    padding: 1.35rem !important;
+  }
+
+  .p-card-content {
+    padding: 0 !important;
+  }
+}
+
+.table-header {
+  margin-bottom: 1rem;
+
+  .section-eyebrow {
+    margin: 0 0 0.3rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral);
+  }
+
+  h2 {
+    margin: 0;
+    font-size: 1.35rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+}
+
+.user-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-mini-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 71, 0.1);
+  color: var(--coral);
+  flex-shrink: 0;
+
+  i {
+    font-size: 0.95rem;
+  }
+}
+
+.user-cell-copy {
+  strong {
+    color: var(--charcoal);
+    font-size: 0.95rem;
+  }
+}
+
+.user-email {
+  color: var(--charcoal-mid);
+  font-size: 0.92rem;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.actions-column {
+  width: 120px;
+}
+
+.empty-table-state {
+  min-height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1rem;
+
+  h3 {
+    margin: 1rem 0 0;
+    font-size: 1.15rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+
+  p {
+    margin: 0.5rem 0 0;
+    max-width: 360px;
+    color: var(--charcoal-light);
+    line-height: 1.7;
+  }
+}
+
+.empty-icon {
+  width: 74px;
+  height: 74px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 71, 0.1);
+  color: var(--coral);
+
+  i {
+    font-size: 1.5rem;
+  }
+}
+
+.user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.2rem;
+
+  label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+  }
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.65rem;
+  margin-top: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(232, 224, 214, 0.8);
+}
+
+:host ::ng-deep {
+  .users-table {
+    .p-datatable-thead > tr > th {
+      vertical-align: middle;
+    }
+
+    .p-datatable-tbody > tr > td {
+      vertical-align: middle;
+    }
+  }
+
+  .p-inputtext,
+  .p-select {
+    min-height: 50px;
+  }
+
+  .btn-cancel {
+    background: transparent !important;
+    border: 1px solid var(--border) !important;
+    color: var(--charcoal) !important;
+
+    &:hover {
+      background: var(--cream-dark) !important;
+      border-color: var(--charcoal-light) !important;
+      color: var(--charcoal) !important;
+    }
+  }
+
+  .user-dialog {
+    .p-dialog-header {
+      padding: 1.2rem 1.2rem 0.8rem !important;
+    }
+
+    .p-dialog-content {
+      padding: 0 1.2rem 1rem !important;
+      overflow: visible !important;
+    }
+
+    .p-dialog-footer {
+      padding: 0.8rem 1.2rem 1.2rem !important;
+    }
+  }
+}
+
+.p-select-overlay {
+  border-radius: 18px !important;
+  border: 1px solid rgba(232, 224, 214, 0.9) !important;
+  box-shadow: 0 18px 40px rgba(28, 25, 23, 0.12) !important;
+  overflow: hidden !important;
+}
+
+.p-select-list-container {
+  padding: 0.35rem 0 !important;
+}
+
+.p-select-option {
+  min-height: 44px !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+@media (max-width: 992px) {
+  .user-list-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .user-list-actions {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .user-list-container {
+    padding: 0 0 1.5rem;
+  }
+
+  .user-list-hero {
+    padding: 1.2rem;
+    border-radius: 22px;
+  }
+
+  .actions {
+    justify-content: flex-start;
+  }
+
+  .dialog-actions {
+    flex-direction: column-reverse;
+
+    .p-button {
+      width: 100%;
+    }
+  }
+
+  :host ::ng-deep .user-list-card .p-card-body {
+    padding: 1.1rem !important;
+  }
+}

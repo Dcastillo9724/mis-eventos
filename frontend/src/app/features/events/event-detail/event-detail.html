@@ -1,0 +1,419 @@
+<p-toast position="bottom-right" />
+
+<div class="event-detail-container">
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-orb">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+      <p>Cargando información del evento...</p>
+    </div>
+  }
+
+  @if (!loading() && event()) {
+    <div class="event-hero">
+      <div class="event-hero-left">
+        <a routerLink="/events" class="back-link">
+          <i class="pi pi-arrow-left"></i>
+          <span>Volver a eventos</span>
+        </a>
+
+        <div class="event-hero-copy">
+          <div class="event-badges">
+            <p-tag
+              [value]="getStatusLabel(event()!.status)"
+              [severity]="getStatusSeverity(event()!.status)"
+            />
+            <span class="event-capacity-chip">
+              <i class="pi pi-users"></i>
+              {{ event()!.registered_count }} / {{ event()!.capacity }} inscritos
+            </span>
+          </div>
+
+          <h1>{{ event()!.title }}</h1>
+
+          <p class="event-description">
+            {{ event()!.description ?? 'Este evento aún no cuenta con una descripción disponible.' }}
+          </p>
+
+          <div class="event-hero-meta">
+            <div class="hero-meta-item">
+              <i class="pi pi-map-marker"></i>
+              <span>{{ event()!.location ?? 'Ubicación por confirmar' }}</span>
+            </div>
+            <div class="hero-meta-item">
+              <i class="pi pi-calendar"></i>
+              <span>{{ event()!.start_date | date:'medium' }}</span>
+            </div>
+            <div class="hero-meta-item">
+              <i class="pi pi-calendar-times"></i>
+              <span>{{ event()!.end_date | date:'medium' }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      @if (authService.canManageEvents()) {
+        <div class="event-hero-actions">
+          <p-button
+            label="Editar"
+            icon="pi pi-pencil"
+            severity="secondary"
+            [routerLink]="['/events', event()!.id, 'edit']"
+          />
+          @if (event()!.status === 'draft') {
+            <p-button
+              label="Eliminar"
+              icon="pi pi-trash"
+              severity="danger"
+              (onClick)="deleteEvent()"
+            />
+          } @else if (event()!.status !== 'cancelled' && event()!.status !== 'completed') {
+            <p-button
+              label="Cancelar evento"
+              icon="pi pi-ban"
+              severity="danger"
+              (onClick)="cancelEvent()"
+            />
+          }
+        </div>
+      }
+    </div>
+
+    <div class="event-body">
+      <aside class="event-sidebar">
+        <p-card styleClass="event-side-card">
+          <div class="side-card-header">
+            <div class="side-icon">
+              <i class="pi pi-info-circle"></i>
+            </div>
+            <div>
+              <h2>Información del evento</h2>
+              <p>Consulta los detalles principales y gestiona tu inscripción.</p>
+            </div>
+          </div>
+
+          <div class="event-meta-list">
+            <div class="meta-card-item">
+              <div class="meta-card-icon"><i class="pi pi-map-marker"></i></div>
+              <div>
+                <span class="meta-label">Ubicación</span>
+                <strong>{{ event()!.location ?? 'Sin ubicación definida' }}</strong>
+              </div>
+            </div>
+            <div class="meta-card-item">
+              <div class="meta-card-icon"><i class="pi pi-calendar"></i></div>
+              <div>
+                <span class="meta-label">Fecha de inicio</span>
+                <strong>{{ event()!.start_date | date:'medium' }}</strong>
+              </div>
+            </div>
+            <div class="meta-card-item">
+              <div class="meta-card-icon"><i class="pi pi-calendar-times"></i></div>
+              <div>
+                <span class="meta-label">Fecha de finalización</span>
+                <strong>{{ event()!.end_date | date:'medium' }}</strong>
+              </div>
+            </div>
+            <div class="meta-card-item">
+              <div class="meta-card-icon"><i class="pi pi-users"></i></div>
+              <div>
+                <span class="meta-label">Inscripciones</span>
+                <strong>{{ event()!.registered_count }} / {{ event()!.capacity }} inscritos</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="registration-box">
+            @if (event()!.status === 'cancelled') {
+              <div class="login-box">
+                <i class="pi pi-ban"></i>
+                <div>
+                  <span class="info-box-kicker">Evento cancelado</span>
+                  <p>Este evento ha sido cancelado y no acepta inscripciones.</p>
+                </div>
+              </div>
+            } @else if (authService.isAuthenticated()) {
+              @if (authService.canRegisterInEvents()) {
+                @if (!isRegistered()) {
+                  <div class="registration-panel">
+                    <div class="registration-panel-copy">
+                      <span class="registration-kicker">Tu participación</span>
+                      <p class="registration-text">
+                        Reserva tu lugar en este evento. El cupo está sujeto a disponibilidad.
+                      </p>
+                    </div>
+                    <p-button
+                      label="Inscribirme"
+                      icon="pi pi-check"
+                      [loading]="registering()"
+                      [disabled]="!hasCapacity()"
+                      (onClick)="register()"
+                      styleClass="w-full"
+                    />
+                    @if (!hasCapacity()) {
+                      <small class="capacity-warning">
+                        Este evento ha alcanzado su capacidad máxima.
+                      </small>
+                    }
+                  </div>
+                } @else {
+                  <div class="registered-state">
+                    <div class="registered-badge">
+                      <i class="pi pi-check-circle"></i>
+                      <span>Ya estás inscrito en este evento</span>
+                    </div>
+                    <p-button
+                      label="Cancelar inscripción"
+                      icon="pi pi-times"
+                      severity="danger"
+                      [loading]="registering()"
+                      (onClick)="cancelRegistration()"
+                      styleClass="w-full"
+                    />
+                  </div>
+                }
+              } @else if (authService.canManageEvents()) {
+                <div class="login-box manager-box">
+                  <i class="pi pi-briefcase"></i>
+                  <div>
+                    <span class="info-box-kicker">Gestión habilitada</span>
+                    <p>Como administrador u organizador puedes gestionar este evento desde las acciones disponibles.</p>
+                  </div>
+                </div>
+              }
+            } @else {
+              <div class="login-box">
+                <i class="pi pi-lock"></i>
+                <div>
+                  <span class="info-box-kicker">Acceso requerido</span>
+                  <p>
+                    <a routerLink="/auth/login">Inicia sesión</a> para inscribirte y gestionar tu participación.
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </p-card>
+      </aside>
+
+      <section class="event-content">
+        <p-card styleClass="event-main-card">
+          <div class="content-section-header">
+            <div>
+              <p class="section-eyebrow">Agenda</p>
+              <h2>Sesiones programadas</h2>
+              <p>Revisa las actividades, ponentes y horarios del evento.</p>
+            </div>
+            @if (authService.canManageEvents() && event()!.status !== 'cancelled') {
+              <p-button
+                label="Agregar sesión"
+                icon="pi pi-plus"
+                (onClick)="openAddSessionDialog()"
+              />
+            }
+          </div>
+
+          @if ((event()!.sessions?.length ?? 0) === 0) {
+            <div class="empty-state">
+              <div class="empty-icon">
+                <i class="pi pi-calendar-times"></i>
+              </div>
+              <h3>No hay sesiones programadas</h3>
+              <p>Este evento aún no tiene sesiones registradas.</p>
+            </div>
+          } @else {
+            <div class="sessions-list">
+              @for (session of event()!.sessions ?? []; track session.id) {
+                <article class="session-item">
+                  <div class="session-time-pill">
+                    <i class="pi pi-clock"></i>
+                    <span>
+                      {{ session.start_time | date:'shortTime' }} - {{ session.end_time | date:'shortTime' }}
+                    </span>
+                  </div>
+
+                  <div class="session-content">
+                    <h3>{{ session.title }}</h3>
+                    @if (session.description) {
+                      <p class="session-description">{{ session.description }}</p>
+                    }
+                    <div class="session-meta">
+                      @if (session.speaker_name) {
+                        <div class="session-meta-item">
+                          <i class="pi pi-user"></i>
+                          <span>{{ session.speaker_name }}</span>
+                        </div>
+                      }
+                      @if (session.capacity) {
+                        <div class="session-meta-item">
+                          <i class="pi pi-users"></i>
+                          <span>{{ session.registered_count }} / {{ session.capacity }} inscritos</span>
+                        </div>
+                      }
+                    </div>
+                  </div>
+
+                  <div class="session-actions">
+                    @if (authService.canManageEvents() && event()!.status !== 'cancelled') {
+                      <p-button
+                        icon="pi pi-pencil"
+                        severity="secondary"
+                        size="small"
+                        (onClick)="openEditSessionDialog(session)"
+                      />
+                      <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        size="small"
+                        (onClick)="deleteSession(session)"
+                      />
+                    }
+
+                    @if (authService.canRegisterInEvents() && event()!.status !== 'cancelled') {
+                      @if (!isRegisteredToSession(session.id)) {
+                        <p-button
+                          label="Inscribirme"
+                          icon="pi pi-check"
+                          size="small"
+                          [disabled]="!hasSessionCapacity(session)"
+                          (onClick)="registerToSession(session.id)"
+                        />
+                      } @else {
+                        <p-button
+                          label="Cancelar"
+                          icon="pi pi-times"
+                          severity="danger"
+                          size="small"
+                          (onClick)="cancelSessionRegistration(session.id)"
+                        />
+                      }
+                    }
+                  </div>
+                </article>
+              }
+            </div>
+          }
+        </p-card>
+      </section>
+    </div>
+  }
+</div>
+
+<p-dialog
+  [header]="editingSession() ? 'Editar Sesión' : 'Nueva Sesión'"
+  [(visible)]="showSessionDialog"
+  [modal]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(92vw, 40rem)' }"
+  styleClass="session-dialog"
+  appendTo="body"
+>
+  <form [formGroup]="sessionForm" class="session-form">
+    <div class="field">
+      <label>Título *</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="title"
+        placeholder="Ej. Introducción a IA"
+        class="w-full"
+      />
+      @if (sessionForm.get('title')?.invalid && sessionForm.get('title')?.touched) {
+        <small class="p-error">Mínimo 3 caracteres</small>
+      }
+    </div>
+
+    <div class="field">
+      <label>Descripción</label>
+      <textarea
+        pTextarea
+        formControlName="description"
+        rows="4"
+        placeholder="Descripción de la sesión"
+        class="w-full"
+      ></textarea>
+    </div>
+
+    <div class="field">
+      <label>Ponente</label>
+      <input
+        type="text"
+        pInputText
+        formControlName="speaker_name"
+        placeholder="Nombre del ponente"
+        class="w-full"
+      />
+    </div>
+
+    <div class="form-row">
+      <div class="field">
+        <label>Hora inicio *</label>
+        <p-datepicker
+          formControlName="start_time"
+          [showTime]="true"
+          dateFormat="dd/mm/yy"
+          placeholder="Fecha y hora de inicio"
+          styleClass="w-full"
+          appendTo="body"
+          [showIcon]="true"
+          [iconDisplay]="'input'"
+        />
+        @if (sessionForm.get('start_time')?.invalid && sessionForm.get('start_time')?.touched) {
+          <small class="p-error">Requerido</small>
+        }
+      </div>
+
+      <div class="field">
+        <label>Hora fin *</label>
+        <p-datepicker
+          formControlName="end_time"
+          [showTime]="true"
+          dateFormat="dd/mm/yy"
+          placeholder="Fecha y hora de fin"
+          styleClass="w-full"
+          appendTo="body"
+          [showIcon]="true"
+          [iconDisplay]="'input'"
+        />
+        @if (sessionForm.get('end_time')?.invalid && sessionForm.get('end_time')?.touched) {
+          <small class="p-error">Requerido</small>
+        }
+      </div>
+    </div>
+
+    @if (shouldShowTimeRangeError) {
+      <small class="p-error time-range-error">
+        La hora de fin debe ser posterior a la hora de inicio.
+      </small>
+    }
+
+    <div class="field">
+      <label>Capacidad (opcional)</label>
+      <p-inputnumber
+        formControlName="capacity"
+        [min]="1"
+        placeholder="Sin límite si se deja vacío"
+        styleClass="w-full"
+      />
+    </div>
+  </form>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        (onClick)="showSessionDialog.set(false)"
+      />
+      <p-button
+        [label]="editingSession() ? 'Actualizar' : 'Guardar'"
+        icon="pi pi-check"
+        [loading]="savingSession()"
+        [disabled]="sessionForm.invalid"
+        (onClick)="saveSession()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

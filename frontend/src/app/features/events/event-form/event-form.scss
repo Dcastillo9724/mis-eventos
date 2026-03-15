@@ -1,0 +1,358 @@
+.event-form-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0.5rem 0 2rem;
+}
+
+.event-form-header {
+  margin-bottom: 1.5rem;
+
+  .form-eyebrow {
+    display: inline-block;
+    margin: 0 0 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--coral);
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    line-height: 1.05;
+    letter-spacing: -0.04em;
+  }
+
+  .form-subtitle {
+    margin: 0.85rem 0 0;
+    max-width: 680px;
+    font-size: 1rem;
+    color: var(--charcoal-light);
+    line-height: 1.7;
+  }
+}
+
+:host ::ng-deep .event-form-card {
+  border-radius: 28px !important;
+  border: 1px solid rgba(232, 224, 214, 0.95) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 18px 40px rgba(28, 25, 23, 0.08) !important;
+  overflow: visible !important;
+
+  .p-card-body {
+    padding: 1.75rem !important;
+  }
+
+  .p-card-content {
+    padding: 0 !important;
+  }
+}
+
+.event-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.form-section {
+  padding: 1.25rem;
+  border: 1px solid rgba(232, 224, 214, 0.75);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(253, 250, 246, 0.88) 100%);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.section-invalid {
+  border-color: rgba(220, 38, 38, 0.28);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(254, 242, 242, 0.75) 100%);
+  box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.05);
+}
+
+.section-heading {
+  margin-bottom: 1.15rem;
+
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--charcoal);
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    font-size: 0.92rem;
+    color: var(--charcoal-light);
+    line-height: 1.6;
+  }
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-bottom: 1.15rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  label {
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--charcoal);
+    letter-spacing: -0.01em;
+
+    span {
+      color: #dc2626;
+    }
+  }
+
+  small {
+    margin-top: 0.1rem;
+  }
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.15rem;
+}
+
+.section-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-top: 0.35rem;
+  padding: 0.9rem 1rem;
+  border-radius: 14px;
+  border: 1px solid rgba(220, 38, 38, 0.16);
+  background: rgba(254, 242, 242, 0.95);
+  color: #b91c1c;
+  font-size: 0.92rem;
+  line-height: 1.5;
+
+  i {
+    margin-top: 0.1rem;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+
+  span {
+    font-weight: 500;
+  }
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(232, 224, 214, 0.8);
+}
+
+.dialog-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+
+  h3 {
+    margin: 0;
+    font-size: 1.15rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 700;
+    color: var(--charcoal);
+  }
+
+  p {
+    margin: 0.35rem 0 0;
+    font-size: 0.92rem;
+    color: var(--charcoal-light);
+    line-height: 1.55;
+  }
+}
+
+.dialog-icon {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 107, 71, 0.14);
+  color: var(--coral);
+  flex-shrink: 0;
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.dialog-body {
+  padding-top: 0.35rem;
+}
+
+.validation-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  margin: 0;
+  padding: 0;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.6rem;
+    color: var(--charcoal-mid);
+    font-size: 0.94rem;
+    line-height: 1.5;
+
+    i {
+      color: var(--coral);
+      margin-top: 0.15rem;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+  }
+}
+
+.dialog-footer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+:host ::ng-deep {
+  .p-inputtext,
+  .p-inputtextarea,
+  .p-inputnumber-input,
+  .p-select,
+  .p-datepicker-input {
+    min-height: 50px;
+  }
+
+  .p-inputtextarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .p-datepicker,
+  .p-inputnumber,
+  .p-select {
+    width: 100%;
+  }
+
+  .p-datepicker-panel,
+  .p-select-overlay {
+    border-radius: 18px !important;
+    border: 1px solid rgba(232, 224, 214, 0.9) !important;
+    box-shadow: 0 18px 40px rgba(28, 25, 23, 0.12) !important;
+    overflow: hidden !important;
+  }
+
+  .p-datepicker-header {
+    padding: 0.9rem 1rem !important;
+    background: rgba(255, 248, 244, 0.95) !important;
+    border-bottom: 1px solid rgba(232, 224, 214, 0.9) !important;
+  }
+
+  .p-datepicker-calendar td > span {
+    border-radius: 10px !important;
+  }
+
+  .p-datepicker-calendar td.p-datepicker-today > span {
+    background: rgba(255, 107, 71, 0.12) !important;
+    color: var(--coral) !important;
+  }
+
+  .p-datepicker-calendar td.p-datepicker-selected > span,
+  .p-datepicker-calendar td > span.p-highlight {
+    background: var(--coral) !important;
+    color: #fff !important;
+  }
+
+  .field-invalid,
+  .field-invalid:enabled,
+  .field-invalid.p-inputtext,
+  .field-invalid.p-inputtextarea,
+  .field-invalid.p-inputnumber-input,
+  .p-inputtext.field-invalid,
+  .p-inputtextarea.field-invalid,
+  .p-inputnumber-input.field-invalid,
+  .p-datepicker-input.field-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.08) !important;
+  }
+
+  .btn-cancel {
+    background: transparent !important;
+    border: 1px solid var(--border) !important;
+    color: var(--charcoal) !important;
+
+    &:hover {
+      background: var(--cream-dark) !important;
+      border-color: var(--charcoal-light) !important;
+      color: var(--charcoal) !important;
+    }
+  }
+
+  .validation-dialog {
+    .p-dialog-header {
+      padding: 1.25rem 1.25rem 0.75rem !important;
+      border-bottom: none !important;
+    }
+
+    .p-dialog-content {
+      padding: 0 1.25rem 0.5rem !important;
+    }
+
+    .p-dialog-footer {
+      padding: 0.75rem 1.25rem 1.25rem !important;
+      border-top: none !important;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .event-form-container {
+    padding: 0 0 1.5rem;
+  }
+
+  .event-form-header {
+    margin-bottom: 1.2rem;
+
+    .form-subtitle {
+      font-size: 0.95rem;
+    }
+  }
+
+  :host ::ng-deep .event-form-card .p-card-body {
+    padding: 1.2rem !important;
+  }
+
+  .form-section {
+    padding: 1rem;
+    border-radius: 18px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+
+    .p-button {
+      width: 100%;
+    }
+  }
+
+  .dialog-header {
+    gap: 0.75rem;
+  }
+}

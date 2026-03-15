@@ -1,0 +1,190 @@
+<p-toast></p-toast>
+
+<div class="profile-container">
+  <section class="profile-hero">
+    <div class="profile-hero-left">
+      <div class="user-avatar">
+        <i class="pi pi-user"></i>
+      </div>
+
+      <div class="user-details">
+        <p class="profile-eyebrow">Mi perfil</p>
+        <h1>{{ authService.currentUser()?.full_name }}</h1>
+        <p class="user-email">{{ authService.currentUser()?.email }}</p>
+
+        <div class="user-meta">
+          <p-tag
+            [value]="authService.currentUser()?.role?.name ?? ''"
+            severity="info"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div class="profile-hero-summary">
+      <div class="summary-card">
+        <span>Eventos activos</span>
+        <strong>{{ totalActiveEvents() }}</strong>
+      </div>
+      <div class="summary-card">
+        <span>Sesiones activas</span>
+        <strong>{{ totalActiveSessions() }}</strong>
+      </div>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="loading-orb">
+        <i class="pi pi-spin pi-spinner"></i>
+      </div>
+      <p>Cargando tu información...</p>
+    </div>
+  }
+
+  @if (!loading()) {
+    <section class="profile-section">
+      <p-card styleClass="profile-card">
+        <div class="section-header">
+          <div>
+            <p class="section-eyebrow">Agenda personal</p>
+            <h2>Mis inscripciones</h2>
+            <p>
+              Revisa los eventos a los que estás inscrito y, dentro de cada uno,
+              las sesiones asociadas a tu participación.
+            </p>
+          </div>
+        </div>
+
+        @if (!hasRegistrations()) {
+          <div class="empty-state">
+            <div class="empty-icon">
+              <i class="pi pi-calendar-times"></i>
+            </div>
+            <h3>No estás inscrito en ningún evento</h3>
+            <p>
+              Explora la programación disponible y reserva tu lugar en los eventos
+              que más te interesen.
+            </p>
+            <p-button label="Ver eventos" routerLink="/events" />
+          </div>
+        } @else {
+          <div class="grouped-registration-list">
+            @for (group of groupedRegistrations(); track group.eventRegistration.id) {
+              <article class="event-group-card">
+                <div class="event-group-header">
+                  <div class="event-group-main">
+                    <div class="event-group-icon">
+                      <i class="pi pi-calendar"></i>
+                    </div>
+
+                    <div class="event-group-copy">
+                      <div class="event-group-topline">
+                        <span class="group-kicker">Evento</span>
+                        <p-tag
+                          [value]="group.eventRegistration.status === 'active' ? 'Activo' : 'Cancelado'"
+                          [severity]="group.eventRegistration.status === 'active' ? 'success' : 'danger'"
+                        />
+                      </div>
+
+                      <h3>Inscripción al evento</h3>
+                      <p>
+                        Registrado el {{ group.eventRegistration.registered_at | date:'mediumDate' }}
+                      </p>
+
+                      <div class="event-group-meta">
+                        <span class="meta-pill">
+                          <i class="pi pi-clock"></i>
+                          {{ group.sessionRegistrations.length }} sesión(es) asociada(s)
+                        </span>
+
+                        @if (hasActiveSessionsForEvent(group.eventRegistration.event_id)) {
+                          <span class="meta-pill warm">
+                            <i class="pi pi-info-circle"></i>
+                            Tienes sesiones activas dentro de este evento
+                          </span>
+                        }
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="event-group-actions">
+                    <p-button
+                      label="Ver evento"
+                      severity="secondary"
+                      size="small"
+                      [routerLink]="['/events', group.eventRegistration.event_id]"
+                    />
+
+                    @if (group.eventRegistration.status === 'active') {
+                      <p-button
+                        label="Cancelar evento"
+                        severity="danger"
+                        size="small"
+                        (onClick)="cancelEventRegistration(group.eventRegistration.event_id)"
+                      />
+                    }
+                  </div>
+                </div>
+
+                <div class="session-group-block">
+                  <div class="session-group-header">
+                    <div>
+                      <p class="session-group-eyebrow">Sesiones relacionadas</p>
+                      <h4>Sesiones de este evento</h4>
+                    </div>
+                  </div>
+
+                  @if (group.sessionRegistrations.length === 0) {
+                    <div class="nested-empty-state">
+                      <i class="pi pi-clock"></i>
+                      <p>No tienes sesiones inscritas dentro de este evento.</p>
+                    </div>
+                  } @else {
+                    <div class="session-registration-list">
+                      @for (sessionReg of group.sessionRegistrations; track sessionReg.id) {
+                        <div class="session-registration-item">
+                          <div class="session-registration-main">
+                            <div class="session-registration-icon">
+                              <i class="pi pi-clock"></i>
+                            </div>
+
+                            <div class="session-registration-copy">
+                              <div class="session-registration-topline">
+                                <span class="group-kicker">Sesión</span>
+                                <p-tag
+                                  [value]="sessionReg.status === 'active' ? 'Activa' : 'Cancelada'"
+                                  [severity]="sessionReg.status === 'active' ? 'success' : 'danger'"
+                                />
+                              </div>
+
+                              <h5>Inscripción a sesión</h5>
+                              <p>
+                                Registrado el {{ sessionReg.registered_at | date:'mediumDate' }}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div class="session-registration-actions">
+                            @if (sessionReg.status === 'active') {
+                              <p-button
+                                label="Cancelar sesión"
+                                severity="danger"
+                                size="small"
+                                (onClick)="cancelSessionRegistration(sessionReg.session_id)"
+                              />
+                            }
+                          </div>
+                        </div>
+                      }
+                    </div>
+                  }
+                </div>
+              </article>
+            }
+          </div>
+        }
+      </p-card>
+    </section>
+  }
+</div>

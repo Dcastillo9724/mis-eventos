@@ -34,6 +34,7 @@ class SessionRegistrationRead(SQLModel):
     id: uuid.UUID
     user_id: uuid.UUID
     session_id: uuid.UUID
+    event_id: uuid.UUID
     status: RegistrationStatus
     registered_at: datetime
 

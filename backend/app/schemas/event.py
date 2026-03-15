@@ -15,6 +15,7 @@ class EventCreate(SQLModel):
     start_date: datetime
     end_date: datetime
     capacity: int
+    status: str = "draft"
 
 
 class EventUpdate(SQLModel):
@@ -49,6 +50,18 @@ class EventReadWithSessions(EventRead):
     """Schema de lectura de evento con sus sesiones."""
 
     sessions: list["SessionRead"] = []
+
+
+class EventsByStatus(SQLModel):
+    """Respuesta de eventos agrupados por status."""
+    published: list[EventRead] = []
+    draft: list[EventRead] = []
+    cancelled: list[EventRead] = []
+    completed: list[EventRead] = []
+    published_total: int = 0
+    draft_total: int = 0
+    cancelled_total: int = 0
+    completed_total: int = 0
 
 
 from app.schemas.session import SessionRead  

@@ -1,0 +1,208 @@
+<div class="user-list-container">
+  <section class="user-list-hero">
+    <div class="user-list-copy">
+      <p class="list-eyebrow">Administración</p>
+      <h1>Gestión de Usuarios</h1>
+      <p class="list-subtitle">
+        Administra usuarios, asigna roles y mantén el control de acceso dentro de la plataforma.
+      </p>
+    </div>
+
+    <div class="user-list-actions">
+      <p-button
+        label="Nuevo Usuario"
+        icon="pi pi-plus"
+        (onClick)="openCreateDialog()"
+      />
+    </div>
+  </section>
+
+  <p-card styleClass="user-list-card">
+    <div class="table-header">
+      <div>
+        <p class="section-eyebrow">Usuarios registrados</p>
+        <h2>{{ users().length }} usuario(s)</h2>
+      </div>
+    </div>
+
+    <p-table
+      [value]="users()"
+      [loading]="loading()"
+      [paginator]="true"
+      [rows]="10"
+      responsiveLayout="scroll"
+      styleClass="users-table"
+    >
+      <ng-template pTemplate="header">
+        <tr>
+          <th>Nombre</th>
+          <th>Email</th>
+          <th>Rol</th>
+          <th>Estado</th>
+          <th class="actions-column">Acciones</th>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="body" let-user>
+        <tr>
+          <td>
+            <div class="user-cell">
+              <div class="user-mini-avatar">
+                <i class="pi pi-user"></i>
+              </div>
+              <div class="user-cell-copy">
+                <strong>{{ user.full_name }}</strong>
+              </div>
+            </div>
+          </td>
+
+          <td>
+            <span class="user-email">{{ user.email }}</span>
+          </td>
+
+          <td>
+            <p-tag
+              [value]="getRoleLabel(user.role.name)"
+              [severity]="getRoleSeverity(user.role.name)"
+            />
+          </td>
+
+          <td>
+            <p-tag
+              [value]="user.is_active ? 'Activo' : 'Inactivo'"
+              [severity]="user.is_active ? 'success' : 'danger'"
+            />
+          </td>
+
+          <td>
+            <div class="actions">
+              <p-button
+                icon="pi pi-pencil"
+                severity="secondary"
+                size="small"
+                (onClick)="openEditDialog(user)"
+              />
+              <p-button
+                icon="pi pi-trash"
+                severity="danger"
+                size="small"
+                (onClick)="deleteUser(user)"
+              />
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+
+      <ng-template pTemplate="emptymessage">
+        <tr>
+          <td colspan="5">
+            <div class="empty-table-state">
+              <div class="empty-icon">
+                <i class="pi pi-users"></i>
+              </div>
+              <h3>No hay usuarios registrados</h3>
+              <p>Cuando agregues usuarios, aparecerán aquí para su gestión.</p>
+            </div>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </p-card>
+</div>
+
+<p-dialog
+  [header]="editingUser() ? 'Editar Usuario' : 'Nuevo Usuario'"
+  [(visible)]="showDialog"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(92vw, 32rem)' }"
+  styleClass="user-dialog"
+>
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="user-form">
+    <div class="field">
+      <label for="full_name">Nombre completo</label>
+      <input
+        id="full_name"
+        type="text"
+        pInputText
+        formControlName="full_name"
+        class="w-full"
+        placeholder="Nombre del usuario"
+      />
+    </div>
+
+    <div class="field">
+      <label for="email">Correo electrónico</label>
+      <input
+        id="email"
+        type="email"
+        pInputText
+        formControlName="email"
+        class="w-full"
+        placeholder="usuario@email.com"
+        [readonly]="!!editingUser()"
+      />
+    </div>
+
+    @if (!editingUser()) {
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input
+          id="password"
+          type="password"
+          pInputText
+          formControlName="password"
+          class="w-full"
+          placeholder="••••••••"
+        />
+      </div>
+    }
+
+    <div class="field">
+      <label for="role_id">Rol</label>
+      <p-select
+        id="role_id"
+        formControlName="role_id"
+        [options]="mappedRoles()"
+        optionLabel="display_name"
+        optionValue="id"
+        placeholder="Selecciona un rol"
+        styleClass="w-full"
+        appendTo="body"
+      />
+    </div>
+
+    @if (editingUser()) {
+      <div class="field">
+        <label for="is_active">Estado</label>
+        <p-select
+          id="is_active"
+          formControlName="is_active"
+          [options]="statusOptions"
+          optionLabel="label"
+          optionValue="value"
+          placeholder="Selecciona un estado"
+          styleClass="w-full"
+          appendTo="body"
+        />
+      </div>
+    }
+
+    <div class="dialog-actions">
+      <p-button
+        label="Cancelar"
+        severity="secondary"
+        styleClass="btn-cancel"
+        (onClick)="showDialog.set(false)"
+      />
+      <p-button
+        type="submit"
+        [label]="editingUser() ? 'Actualizar' : 'Crear'"
+        [disabled]="form.invalid"
+      />
+    </div>
+  </form>
+</p-dialog>

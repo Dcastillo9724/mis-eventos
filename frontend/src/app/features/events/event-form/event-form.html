@@ -1,0 +1,248 @@
+<div class="event-form-container">
+  <div class="event-form-header">
+    <div>
+      <p class="form-eyebrow">Gestión de eventos</p>
+      <h1>{{ isEditMode ? 'Editar Evento' : 'Crear Evento' }}</h1>
+      <p class="form-subtitle">
+        {{
+          isEditMode
+            ? 'Actualiza la información del evento y mantén todo al día.'
+            : 'Completa la información para publicar un nuevo evento.'
+        }}
+      </p>
+    </div>
+  </div>
+
+  @if (errorMessage) {
+    <p-message severity="error" [text]="errorMessage" styleClass="w-full mb-4" />
+  }
+
+  <p-card styleClass="event-form-card">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="event-form">
+      <section class="form-section">
+        <div class="section-heading">
+          <h2>Información general</h2>
+          <p>Define los datos principales del evento.</p>
+        </div>
+
+        <div class="field">
+          <label for="title">Título <span>*</span></label>
+          <input
+            id="title"
+            type="text"
+            pInputText
+            formControlName="title"
+            placeholder="Ej. Festival de Música en Vivo"
+            class="w-full"
+            [class.field-invalid]="form.get('title')?.invalid && form.get('title')?.touched"
+          />
+          @if (form.get('title')?.invalid && form.get('title')?.touched) {
+            <small class="p-error">El título debe tener al menos 3 caracteres.</small>
+          }
+        </div>
+
+        <div class="field">
+          <label for="description">Descripción</label>
+          <textarea
+            id="description"
+            pTextarea
+            formControlName="description"
+            placeholder="Describe brevemente el evento, sus actividades o detalles importantes"
+            rows="4"
+            class="w-full"
+          ></textarea>
+        </div>
+
+        <div class="field">
+          <label for="location">Ubicación</label>
+          <input
+            id="location"
+            type="text"
+            pInputText
+            formControlName="location"
+            placeholder="Ej. Bogotá, Centro de Convenciones"
+            class="w-full"
+          />
+        </div>
+      </section>
+
+      <section class="form-section" [class.section-invalid]="shouldShowDateRangeError">
+        <div class="section-heading">
+          <h2>Fecha y horario</h2>
+          <p>Selecciona cuándo inicia y finaliza el evento.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="start_date">Fecha de inicio <span>*</span></label>
+            <p-datepicker
+              id="start_date"
+              formControlName="start_date"
+              [showTime]="true"
+              dateFormat="dd/mm/yy"
+              placeholder="Selecciona la fecha de inicio"
+              styleClass="w-full"
+              [appendTo]="'body'"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              [inputStyleClass]="
+                (form.get('start_date')?.invalid && form.get('start_date')?.touched) || shouldShowDateRangeError
+                  ? 'field-invalid'
+                  : ''
+              "
+            />
+            @if (form.get('start_date')?.invalid && form.get('start_date')?.touched) {
+              <small class="p-error">La fecha de inicio es obligatoria.</small>
+            }
+          </div>
+
+          <div class="field">
+            <label for="end_date">Fecha de finalización <span>*</span></label>
+            <p-datepicker
+              id="end_date"
+              formControlName="end_date"
+              [showTime]="true"
+              dateFormat="dd/mm/yy"
+              placeholder="Selecciona la fecha de finalización"
+              styleClass="w-full"
+              [appendTo]="'body'"
+              [showIcon]="true"
+              [iconDisplay]="'input'"
+              [inputStyleClass]="
+                (form.get('end_date')?.invalid && form.get('end_date')?.touched) || shouldShowDateRangeError
+                  ? 'field-invalid'
+                  : ''
+              "
+            />
+            @if (form.get('end_date')?.invalid && form.get('end_date')?.touched) {
+              <small class="p-error">La fecha de finalización es obligatoria.</small>
+            }
+          </div>
+        </div>
+
+        @if (shouldShowDateRangeError) {
+          <div class="section-error">
+            <i class="pi pi-exclamation-triangle"></i>
+            <span>La fecha de finalización debe ser posterior a la fecha de inicio.</span>
+          </div>
+        }
+      </section>
+
+      <section class="form-section">
+        <div class="section-heading">
+          <h2>Configuración</h2>
+          <p>Ajusta la capacidad y el estado del evento.</p>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label for="capacity">Capacidad <span>*</span></label>
+            <p-inputnumber
+              id="capacity"
+              formControlName="capacity"
+              [min]="1"
+              placeholder="Número de asistentes"
+              styleClass="w-full"
+              [inputStyleClass]="form.get('capacity')?.invalid && form.get('capacity')?.touched ? 'field-invalid' : ''"
+            />
+            @if (form.get('capacity')?.invalid && form.get('capacity')?.touched) {
+              <small class="p-error">La capacidad debe ser mínimo de 1 asistente.</small>
+            }
+          </div>
+
+          @if (isEditMode) {
+            <div class="field">
+              <label for="status">Estado</label>
+              <p-select
+                id="status"
+                formControlName="status"
+                [options]="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                placeholder="Selecciona un estado"
+                styleClass="w-full"
+              />
+            </div>
+          }
+        </div>
+      </section>
+
+      <div class="form-actions">
+        <p-button
+          label="Cancelar"
+          severity="secondary"
+          styleClass="btn-cancel"
+          (onClick)="goBack()"
+        />
+
+        @if (!isEditMode) {
+          <p-button
+            label="Guardar borrador"
+            severity="secondary"
+            icon="pi pi-save"
+            [loading]="loading() && submitAction === 'draft'"
+            (onClick)="onSubmitAs('draft')"
+          />
+          <p-button
+            label="Crear y publicar"
+            icon="pi pi-send"
+            [loading]="loading() && submitAction === 'publish'"
+            (onClick)="onSubmitAs('publish')"
+          />
+        } @else {
+          <p-button
+            type="submit"
+            label="Actualizar"
+            icon="pi pi-check"
+            [loading]="loading()"
+          />
+        }
+      </div>
+    </form>
+  </p-card>
+</div>
+
+<p-dialog
+  [(visible)]="showValidationDialog"
+  [modal]="true"
+  [closable]="true"
+  [dismissableMask]="true"
+  [draggable]="false"
+  [resizable]="false"
+  [style]="{ width: 'min(92vw, 34rem)' }"
+  styleClass="validation-dialog"
+  (onHide)="closeValidationDialog()"
+>
+  <ng-template pTemplate="header">
+    <div class="dialog-header">
+      <div class="dialog-icon">
+        <i class="pi pi-exclamation-circle"></i>
+      </div>
+      <div>
+        <h3>{{ validationDialogTitle }}</h3>
+        <p>{{ validationDialogMessage }}</p>
+      </div>
+    </div>
+  </ng-template>
+
+  <div class="dialog-body">
+    <ul class="validation-list">
+      @for (item of validationSummary; track item) {
+        <li>
+          <i class="pi pi-angle-right"></i>
+          <span>{{ item }}</span>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <ng-template pTemplate="footer">
+    <div class="dialog-footer">
+      <p-button
+        label="Entendido"
+        icon="pi pi-check"
+        (onClick)="closeValidationDialog()"
+      />
+    </div>
+  </ng-template>
+</p-dialog>

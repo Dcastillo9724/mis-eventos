@@ -1,0 +1,305 @@
+@import "primeicons/primeicons.css";
+
+$font-display: 'Playfair Display', Georgia, serif;
+$font-body: 'DM Sans', sans-serif;
+
+$coral: #FF6B47;
+$coral-dark: #E8522E;
+$coral-light: #FFE8E2;
+$cream: #FDFAF6;
+$cream-dark: #F5F0E8;
+$charcoal: #1C1917;
+$charcoal-mid: #44403C;
+$charcoal-light: #78716C;
+$white: #FFFFFF;
+$border: #E8E0D6;
+$success: #16A34A;
+$danger: #DC2626;
+$info: #0EA5E9;
+$warning: #D97706;
+
+:root {
+  --coral: #{$coral};
+  --coral-dark: #{$coral-dark};
+  --coral-light: #{$coral-light};
+  --cream: #{$cream};
+  --cream-dark: #{$cream-dark};
+  --charcoal: #{$charcoal};
+  --charcoal-mid: #{$charcoal-mid};
+  --charcoal-light: #{$charcoal-light};
+  --border: #{$border};
+  --white: #{$white};
+
+  --primary-color: #{$coral};
+  --primary-dark-color: #{$coral-dark};
+  --surface-ground: #{$cream};
+  --surface-card: #{$white};
+  --surface-border: #{$border};
+  --text-color: #{$charcoal};
+  --text-color-secondary: #{$charcoal-light};
+
+  --shadow-sm: 0 4px 14px rgba(28, 25, 23, 0.05);
+  --shadow-md: 0 10px 30px rgba(28, 25, 23, 0.08);
+  --shadow-lg: 0 18px 50px rgba(28, 25, 23, 0.1);
+  --radius-sm: 12px;
+  --radius-md: 18px;
+  --radius-lg: 24px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-body;
+  background: var(--cream);
+  color: var(--charcoal);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body, app-root {
+  min-height: 100vh;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+h1, h2, h3, h4 {
+  font-family: $font-display;
+  line-height: 1.1;
+  color: var(--charcoal);
+  letter-spacing: -0.03em;
+}
+
+h1 {
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+}
+
+h2 {
+  font-size: clamp(1.8rem, 3vw, 2.6rem);
+}
+
+h3 {
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+}
+
+p {
+  color: var(--charcoal-mid);
+}
+
+a {
+  color: var(--coral);
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: var(--coral-dark);
+  }
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+.w-full { width: 100% !important; }
+.text-center { text-align: center; }
+.mt-2 { margin-top: 0.5rem; }
+.mt-3 { margin-top: 0.75rem; }
+.mt-4 { margin-top: 1rem; }
+.mb-4 { margin-bottom: 1rem; }
+
+.surface-card {
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(232, 224, 214, 0.9);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.p-error {
+  color: #{$danger};
+  font-size: 0.8rem;
+  font-family: $font-body;
+}
+
+.p-card {
+  border-radius: 20px !important;
+  border: 1px solid rgba(232, 224, 214, 0.9) !important;
+  box-shadow: 0 8px 24px rgba(28, 25, 23, 0.06) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
+  overflow: hidden !important;
+
+  .p-card-body {
+    padding: 1.4rem !important;
+  }
+
+  .p-card-title {
+    font-family: $font-display !important;
+    font-size: 1.45rem !important;
+    color: var(--charcoal) !important;
+    letter-spacing: -0.02em !important;
+  }
+
+  .p-card-subtitle {
+    color: var(--charcoal-light) !important;
+  }
+}
+
+.p-button {
+  border-radius: 14px !important;
+  font-family: $font-body !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.01em !important;
+  transition: all 0.22s ease !important;
+  box-shadow: none !important;
+
+  &.p-button-primary,
+  &:not(.p-button-secondary):not(.p-button-danger):not(.p-button-info):not(.p-button-text):not(.p-button-outlined) {
+    background: linear-gradient(135deg, var(--coral) 0%, #ff8a65 100%) !important;
+    border-color: transparent !important;
+
+    &:hover {
+      background: linear-gradient(135deg, var(--coral-dark) 0%, #f97352 100%) !important;
+      transform: translateY(-1px) !important;
+      box-shadow: 0 8px 20px rgba(255, 107, 71, 0.3) !important;
+    }
+  }
+}
+
+.p-inputtext,
+.p-inputnumber-input,
+.p-dropdown,
+.p-multiselect,
+.p-calendar .p-inputtext {
+  border-radius: 14px !important;
+  border-color: var(--border) !important;
+  font-family: $font-body !important;
+  transition: all 0.2s ease !important;
+  background: rgba(255, 255, 255, 0.92) !important;
+
+  &:focus {
+    border-color: var(--coral) !important;
+    box-shadow: 0 0 0 4px rgba(255, 107, 71, 0.12) !important;
+  }
+}
+
+.p-input-icon-left > i,
+.p-input-icon-right > i {
+  color: var(--charcoal-light) !important;
+}
+
+.p-tag {
+  border-radius: 999px !important;
+  font-family: $font-body !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  padding: 0.35rem 0.7rem !important;
+}
+
+.p-paginator {
+  background: transparent !important;
+  border: none !important;
+  padding-top: 1rem !important;
+
+  .p-paginator-page,
+  .p-paginator-prev,
+  .p-paginator-next,
+  .p-paginator-first,
+  .p-paginator-last {
+    border-radius: 10px !important;
+  }
+}
+
+.p-dialog {
+  border-radius: 24px !important;
+  overflow: hidden !important;
+  box-shadow: var(--shadow-lg) !important;
+
+  .p-dialog-header {
+    font-family: $font-display !important;
+    background: var(--white) !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 1.2rem 1.4rem !important;
+  }
+
+  .p-dialog-content {
+    padding: 1.4rem !important;
+  }
+}
+
+.p-datatable {
+  .p-datatable-wrapper {
+    border-radius: 18px;
+    overflow: hidden;
+  }
+
+  .p-datatable-thead > tr > th {
+    background: var(--cream-dark) !important;
+    font-family: $font-body !important;
+    font-weight: 700 !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: var(--charcoal-light) !important;
+    border-color: var(--border) !important;
+  }
+
+  .p-datatable-tbody > tr {
+    transition: background 0.15s !important;
+
+    &:hover {
+      background: rgba(255, 248, 244, 0.85) !important;
+    }
+  }
+
+  .p-datatable-tbody > tr > td {
+    border-color: rgba(232, 224, 214, 0.8) !important;
+  }
+}
+
+.p-component-overlay {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--cream-dark);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8cec1;
+  border-radius: 999px;
+
+  &:hover {
+    background: var(--charcoal-light);
+  }
+}
+
+::selection {
+  background: rgba(255, 107, 71, 0.18);
+  color: var(--charcoal);
+}

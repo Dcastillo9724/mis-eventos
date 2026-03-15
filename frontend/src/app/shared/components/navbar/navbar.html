@@ -1,0 +1,72 @@
+<header class="navbar">
+  <div class="navbar-inner">
+    <a routerLink="/events" class="navbar-brand" (click)="closeMenu()">
+      <div class="brand-icon">
+        <i class="pi pi-calendar"></i>
+      </div>
+
+      <div class="brand-copy">
+        <span class="brand-name">Mis<strong>Eventos</strong></span>
+        <small class="brand-tagline">Experiencias memorables</small>
+      </div>
+    </a>
+
+    <nav class="navbar-links" [class.open]="menuOpen">
+      <a routerLink="/events" routerLinkActive="active" (click)="closeMenu()">
+        <i class="pi pi-calendar"></i>
+        <span>Eventos</span>
+      </a>
+
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/profile" routerLinkActive="active" (click)="closeMenu()">
+          <i class="pi pi-user"></i>
+          <span>Mi Perfil</span>
+        </a>
+      }
+
+      @if (authService.hasRole('admin')) {
+        <a routerLink="/users" routerLinkActive="active" (click)="closeMenu()">
+          <i class="pi pi-users"></i>
+          <span>Usuarios</span>
+        </a>
+      }
+
+      <div class="navbar-auth mobile-only">
+        @if (!authService.isAuthenticated()) {
+          <a routerLink="/auth/login" class="btn-outline" (click)="closeMenu()">Ingresar</a>
+          <a routerLink="/auth/register" class="btn-solid" (click)="closeMenu()">Registrarse</a>
+        } @else {
+          <div class="user-chip">
+            <i class="pi pi-user"></i>
+            <span>{{ authService.currentUser()?.full_name }}</span>
+          </div>
+          <button class="btn-logout mobile-logout" (click)="authService.logout(); closeMenu()">
+            <i class="pi pi-sign-out"></i>
+            <span>Salir</span>
+          </button>
+        }
+      </div>
+    </nav>
+
+    <div class="navbar-auth desktop-only">
+      @if (!authService.isAuthenticated()) {
+        <a routerLink="/auth/login" class="btn-outline">Ingresar</a>
+        <a routerLink="/auth/register" class="btn-solid">Registrarse</a>
+      } @else {
+        <div class="user-chip">
+          <i class="pi pi-user"></i>
+          <span>{{ authService.currentUser()?.full_name }}</span>
+        </div>
+        <button class="btn-logout" (click)="authService.logout(); closeMenu()" aria-label="Cerrar sesión">
+          <i class="pi pi-sign-out"></i>
+        </button>
+      }
+    </div>
+
+    <button class="hamburger" (click)="toggleMenu()" [class.active]="menuOpen" aria-label="Abrir menú">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </div>
+</header>

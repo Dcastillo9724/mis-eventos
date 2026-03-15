@@ -80,5 +80,18 @@ class AttendeeService:
         registration.status = "cancelled"
         return self.session_reg_repo.update(registration)
 
-    def get_user_session_registrations(self, user_id: UUID, offset: int, limit: int) -> list[SessionRegistration]:
-        return self.session_reg_repo.get_by_user(user_id, offset, limit)
+    def get_user_session_registrations(self, user_id: UUID, offset: int, limit: int) -> list[dict]:
+        """Retorna las sesiones del usuario con event_id incluido."""
+        registrations = self.session_reg_repo.get_by_user(user_id, offset, limit)
+        result = []
+        for reg in registrations:
+            session = self.session_repo.get_by_id(reg.session_id)
+            result.append({
+                "id": reg.id,
+                "user_id": reg.user_id,
+                "session_id": reg.session_id,
+                "event_id": session.event_id if session else None,
+                "status": reg.status,
+                "registered_at": reg.registered_at,
+            })
+        return result

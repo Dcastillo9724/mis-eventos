@@ -1,7 +1,7 @@
 import uuid
-from typing import Annotated
+from typing import Annotated, Optional
 
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlmodel import Session, select
 
@@ -50,6 +50,21 @@ def get_current_user(token: TokenDep, session: SessionDep) -> User:
         )
 
     return user
+
+
+def get_optional_user(request: Request, session: SessionDep) -> Optional[User]:
+    """Retorna el usuario si está autenticado, None si no."""
+    token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    if not token:
+        return None
+    try:
+        user_id = decode_access_token(token)
+        if not user_id:
+            return None
+        user_uuid = uuid.UUID(user_id)
+        return session.exec(select(User).where(User.id == user_uuid)).first()
+    except Exception:
+        return None
 
 
 def require_role(*roles: str):

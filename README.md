@@ -6,17 +6,20 @@ Plataforma web para la gestión de eventos, sesiones y asistentes. Desarrollada 
 
 | Backend | Frontend |
 |---------|----------|
-| Python 3.12 | Angular |
-| FastAPI | PrimeNG |
+| Python 3.12 | Angular 20 |
+| FastAPI | PrimeNG 20 |
 | PostgreSQL | TypeScript |
-| SQLModel | |
-| Docker | |
+| SQLModel | SCSS |
+| Alembic | Nginx |
+| Docker | Docker |
 
-## Requisitos previos
+## Levantar el proyecto completo
+
+### Requisitos previos
 
 - Docker y Docker Compose
 
-## Levantar el proyecto completo
+### Comando
 ```bash
 git clone https://github.com/Dcastillo9724/mis-eventos.git
 cd mis-eventos
@@ -32,11 +35,13 @@ Servicios disponibles:
 | Swagger UI | http://localhost:8000/docs |
 | ReDoc | http://localhost:8000/redoc |
 
+Los roles iniciales se crean automáticamente al arrancar.
+
 ## Estructura del repositorio
 ```
 mis-eventos/
-├── backend/    ← API REST con FastAPI
-├── frontend/   ← Aplicación Angular
+├── backend/         ← API REST con FastAPI
+├── frontend/        ← Aplicación Angular
 └── docker-compose.yml
 ```
 

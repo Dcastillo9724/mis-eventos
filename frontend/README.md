@@ -1,59 +1,81 @@
-# Frontend
+# Mis Eventos - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.20.
+Aplicación web para la plataforma de gestión de eventos **Mis Eventos**, desarrollada con Angular 20 y PrimeNG.
 
-## Development server
+## Tecnologías
 
-To start a local development server, run:
+- Angular 20
+- PrimeNG 20
+- TypeScript
+- SCSS
+- Nginx (producción)
+- Docker
 
+## Requisitos previos
+
+- Node.js 22
+- Angular CLI 20
+
+## Configuración local
+
+### 1. Navegar a la carpeta del frontend
+```bash
+cd mis-eventos/frontend
+```
+
+### 2. Instalar dependencias
+```bash
+npm install
+```
+
+### 3. Levantar el servidor de desarrollo
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+La app estará disponible en `http://localhost:4200`
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+## Estructura del proyecto
+```
+frontend/src/app/
+├── core/
+│   ├── guards/          ← Protección de rutas
+│   ├── interceptors/    ← Token JWT y manejo de errores
+│   ├── models/          ← Interfaces TypeScript
+│   └── services/        ← Servicios HTTP
+├── shared/
+│   └── components/
+│       ├── navbar/      ← Barra de navegación
+│       └── footer/      ← Pie de página
+└── features/
+    ├── auth/            ← Login y registro
+    ├── events/          ← Listado, detalle y formulario
+    ├── profile/         ← Perfil y mis inscripciones
+    └── users/           ← Gestión de usuarios (admin)
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Rutas
 
+| Ruta | Descripción | Acceso |
+|------|-------------|--------|
+| `/events` | Listado de eventos | Público |
+| `/events/:id` | Detalle del evento | Público |
+| `/events/create` | Crear evento | Admin, Organizador |
+| `/events/:id/edit` | Editar evento | Admin, Organizador |
+| `/auth/login` | Iniciar sesión | Público |
+| `/auth/register` | Registro | Público |
+| `/profile` | Mi perfil e inscripciones | Autenticado |
+| `/users` | Gestión de usuarios | Admin |
+
+## Roles
+
+| Rol | Permisos |
+|-----|----------|
+| admin | Acceso total |
+| organizer | Crear y gestionar eventos y sesiones |
+| attendee | Inscribirse a eventos y sesiones |
+
+## Build de producción
 ```bash
-ng generate --help
+ng build --configuration=production
 ```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
